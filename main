@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct produto {
+    int codigo; 
+    double preco; 
+    struct produto *proximo; 
+};
+
+
+void listar (struct produto *noatual)
+{
+    int i=0;
+    while( noatual != NULL) 
+    {
+        i++;
+        printf("\n\nProduto numero %d\nCodigo: %d \nPreco:R$%.2lf", i, noatual->codigo, noatual->preco);
+        noatual = noatual->proximo; 
+    }
+}
+
+void inserir (struct produto **cabeca)
+{
+    struct produto *noatual, *novono;
+    int cod;
+    double preco;
+    printf("\n Codigo do novo produto: ");
+    scanf("%d", &cod);
+    printf("\n Preco do produto:R$");
+    scanf("%lf", &preco);
+    if (*cabeca == NULL) {
+        *cabeca = (struct produto *) malloc(sizeof(struct produto));
+        (*cabeca)->codigo = cod;
+        (*cabeca)->preco = preco;
+        (*cabeca)->proximo = NULL;
+    }
+    else
+    {
+        noatual = *cabeca;
+    while(noatual->proximo != NULL)
+        noatual = noatual->proximo; 
+        novono = (struct produto *) malloc(sizeof(struct produto));
+        novono->codigo = cod;
+        novono->preco = preco;
+        novono->proximo = NULL;
+        noatual->proximo = novono; 
+    }
+}
+
+int main() {
+    struct produto *cabeca = NULL; 
+    struct produto *noatual; 
+    char q; 
+    do {
+        printf("\n\nOpcoes: \nI -> para inserir novo produto;\nL -> para listar os produtos; \nS -> para sair \n:");
+        scanf("%c", &q); 
+        switch(q) {
+        case 'i': case 'I': inserir(&cabeca); break;
+        case 'l': case 'L': listar(cabeca); break;
+        case 's': case 'S': break;
+        default: printf("\n\n Opcao nao valida");
+        }
+        getchar(); 
+    } while ((q != 's') && (q != 'S') );
+    noatual = cabeca;
+    while (noatual != NULL){
+        cabeca = noatual->proximo;
+        free(noatual);
+        noatual = cabeca;
+	}
+}
